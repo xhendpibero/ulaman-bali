@@ -39,9 +39,13 @@ export function ScrollHighlightingCta() {
 
       const rect = element.getBoundingClientRect();
       const viewportHeight = window.innerHeight || 1;
-      const totalScrollable = rect.height + viewportHeight;
-      const distanceFromTop = viewportHeight - rect.top;
-      const rawProgress = distanceFromTop / totalScrollable;
+
+      // Consider progress complete once the section's midpoint reaches the viewport midpoint.
+      const elementMidpoint = rect.top + rect.height / 2;
+      const startThreshold = viewportHeight;
+      const endThreshold = viewportHeight / 2;
+      const denominator = Math.max(startThreshold - endThreshold, 1);
+      const rawProgress = (startThreshold - elementMidpoint) / denominator;
       const nextProgress = clamp(rawProgress, 0, 1);
 
       setScrollProgress((current) =>

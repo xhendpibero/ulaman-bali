@@ -174,3 +174,9 @@ html {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
+
+.input-field {
+  border-color: hsla(40, 37%, 89%, .7);
+  --tw-text-opacity: 1;
+  color: rgb(237 230 216 / var(--tw-text-opacity));
+}

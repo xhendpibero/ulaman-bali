@@ -86,7 +86,7 @@ export function ExperiencesScheduleSlice() {
                           >
                             {entry ? (
                               <h4
-                                className="custom-width absolute left-1/2 top-1/2 flex h-full w-full max-h-20 -translate-x-1/2 items-center rounded-md p-1 pl-2 text-left text-smallest font-normal text-brand hover:opacity-80"
+                                className="custom-width absolute left-1/2 top-1/2 flex h-full w-full max-h-20 -translate-x-1/2 items-center rounded-md p-1 pl-2 text-left text-smallest font-normal  hover:opacity-80"
                                 style={{
                                   backgroundColor: entry.color,
                                   height: entry.height,

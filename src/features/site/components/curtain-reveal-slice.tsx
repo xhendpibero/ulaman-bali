@@ -32,8 +32,8 @@ const CURTAIN_EPSILON = 0.001;
 
 export function CurtainRevealSlice() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const frameRef = useRef<number>();
-  const animationRef = useRef<number>();
+  const frameRef = useRef<number | undefined>(undefined);
+  const animationRef = useRef<number | undefined>(undefined);
   const targetProgressRef = useRef(0);
   const displayRef = useRef(0);
   const [displayProgress, setDisplayProgress] = useState(0);

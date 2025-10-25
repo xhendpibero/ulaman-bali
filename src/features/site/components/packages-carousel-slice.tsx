@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -40,31 +40,51 @@ const PACKAGES: PackageItem[] = [
 ];
 
 export function PackagesCarouselSlice() {
-  const totalSlides = PACKAGES.length;
-  const [activeIndex, setActiveIndex] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
 
-  const handlePrev = useCallback(() => {
-    if (totalSlides <= 1) {
+  const updateScrollState = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container) {
       return;
     }
-    setActiveIndex((current) => (current - 1 + totalSlides) % totalSlides);
-  }, [totalSlides]);
 
-  const handleNext = useCallback(() => {
-    if (totalSlides <= 1) {
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    const maxScroll = Math.max(scrollWidth - clientWidth, 0);
+
+    setCanScrollPrev(scrollLeft > 0);
+    setCanScrollNext(scrollLeft < maxScroll - 1);
+  }, []);
+
+  const handleNavigate = useCallback((direction: "prev" | "next") => {
+    const container = scrollContainerRef.current;
+    if (!container) {
       return;
     }
-    setActiveIndex((current) => (current + 1) % totalSlides);
-  }, [totalSlides]);
 
-  const activePackage = PACKAGES[activeIndex] ?? null;
-  const slides = PACKAGES.map((item, index) => ({
-    item,
-    index,
-    isActive: index === activeIndex,
-  }));
+    const offset = direction === "prev" ? -80 : 80;
+    container.scrollBy({ left: offset, behavior: "smooth" });
+    window.requestAnimationFrame(updateScrollState);
+  }, [updateScrollState]);
 
-  const navigationDisabled = totalSlides <= 1;
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) {
+      return;
+    }
+
+    updateScrollState();
+
+    const handle = () => updateScrollState();
+    container.addEventListener("scroll", handle, { passive: true });
+    window.addEventListener("resize", handle);
+
+    return () => {
+      container.removeEventListener("scroll", handle);
+      window.removeEventListener("resize", handle);
+    };
+  }, [updateScrollState]);
 
   return (
     <section
@@ -98,47 +118,32 @@ export function PackagesCarouselSlice() {
             <div className="flex flex-col gap-5 text-brand sm:gap-3.5 lg:gap-6">
               <CarouselButton
                 direction="prev"
-                onClick={handlePrev}
-                disabled={navigationDisabled}
+                onClick={() => handleNavigate("prev")}
+                disabled={!canScrollPrev}
               />
               <CarouselButton
                 direction="next"
-                onClick={handleNext}
-                disabled={navigationDisabled}
+                onClick={() => handleNavigate("next")}
+                disabled={!canScrollNext}
               />
             </div>
           </nav>
 
-          <div className="flex-1 overflow-hidden">
-            <div className="overflow-hidden">
-              <div className="relative -ml-4 sm:dir-ltr">
-                {activePackage ? (
-                  <div
-                    aria-hidden="true"
-                    className="group min-w-0 shrink-0 grow-0 basis-auto pb-1 pl-4 sm:pl-10 sm:last:pr-10 lg:pl-18 lg:last:pr-18 invisible"
-                  >
-                    <PackageCard item={activePackage} />
-                  </div>
-                ) : null}
-
-                {slides.map(({ item, index, isActive }) => (
-                  <div
-                    key={item.title}
-                    data-slide-index={index}
-                    role="group"
-                    aria-roledescription="slide"
-                    aria-hidden={!isActive}
-                    className={cn(
-                      "absolute inset-0 group min-w-0 shrink-0 grow-0 basis-auto pb-1 pl-4 sm:pl-10 sm:last:pr-10 lg:pl-18 lg:last:pr-18 transition-opacity duration-500 ease-out",
-                      isActive
-                        ? "opacity-100"
-                        : "pointer-events-none opacity-0",
-                    )}
-                  >
-                    <PackageCard item={item} />
-                  </div>
-                ))}
-              </div>
+          <div className="flex-1">
+            <div
+              ref={scrollContainerRef}
+              className="flex -ml-4 overflow-x-auto scroll-smooth sm:dir-ltr"
+            >
+              {PACKAGES.map((item) => (
+                <div
+                  key={item.title}
+                  role="group"
+                  aria-roledescription="slide"
+                  className="group min-w-0 shrink-0 grow-0 basis-auto pb-1 pl-4 sm:pl-10 last:pr-10 lg:pl-18 lg:last:pr-18"
+                >
+                  <PackageCard item={item} />
+                </div>
+              ))}
             </div>
           </div>
         </div>

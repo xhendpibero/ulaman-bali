@@ -218,110 +218,118 @@ export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
     >
       <div
         className={cn(
-          "pointer-events-auto transition-[background-color,border-color,color] duration-300",
+          "pointer-events-auto relative z-50 flex app-container py-2 transition-[background-color,border-color,color] duration-300 sm:py-4 lg:items-center lg:justify-between lg:px-8 xl:max-w-unset xl:px-10",
           isMenuOpen
-            ? "border-b border-brand/20 bg-light text-brand"
+            ? "border-b-[0.9px] border-brand/20 bg-light text-brand"
             : isScrolled
-              ? "border-b border-brand/20 bg-light-background text-brand"
+              ? "border-b-[0.9px] border-brand/20 bg-light-background text-brand"
               : "border-b border-transparent bg-transparent text-light",
         )}
       >
-        <div className="app-container flex items-center justify-between py-2 sm:py-4 lg:px-8 xl:px-10">
-          <div className="flex flex-1 items-center gap-10 lg:gap-14">
+        <div className="flex flex-1 items-center">
+          <nav className="flex w-full items-center space-x-10 xl:space-x-14">
             <MenuToggleButton
               isOpen={isMenuOpen}
               onClick={handleToggleMenu}
               isScrolled={isMenuOpen || isScrolled}
             />
 
-            <nav className="hidden items-center gap-9 xl:flex">
+            <ul className="hidden items-center space-x-9 xl:flex">
               {PRIMARY_LINKS.map((item) => (
-                <NavAnchor
-                  key={item.href}
-                  {...item}
+                <li key={item.href} className="header-animation-target">
+                  <NavAnchor
+                    {...item}
+                    className={cn(
+                      "ui-underline-anim text-normal tracking-wide transition",
+                      isMenuOpen || isScrolled
+                        ? "text-brand hover:text-brand/70"
+                        : "text-light hover:text-light/80",
+                    )}
+                  />
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+
+        {/* <div className="hidden flex-1 text-smallest sm:block lg:block">
+          <ul className="space-y-1 lg:space-y-0">
+            {REVIEW_LINKS.map((review) => (
+              <li key={review.href}>
+                <a
+                  href={review.href}
+                  target="_blank"
+                  rel="noreferrer"
                   className={cn(
-                    "ui-underline-anim text-smaller tracking-wide transition",
+                    "flex items-center gap-1 transition",
                     isMenuOpen || isScrolled
-                      ? "text-brand hover:text-brand/70"
+                      ? "text-brand/80 hover:text-brand"
                       : "text-light hover:text-light/80",
                   )}
-                />
-              ))}
-            </nav>
-          </div>
+                >
+                  <span>{review.score}</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                    className="h-3.5 w-3.5"
+                  >
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                  </svg>
+                  <span>/</span>
+                  <span>{review.descriptor}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div> */}
 
-          <div className="flex flex-1 items-center justify-center">
-            <Link
-              href="/"
-              aria-label={siteName}
-              className="transition-opacity duration-300 hover:opacity-80"
+        <div className="flex flex-1 items-center justify-center">
+          <Link
+            href="/"
+            aria-label={siteName}
+            className="transition-opacity duration-300 hover:opacity-80"
+          >
+            <figure
+              className={cn(
+                "logo opacity-100 transition-[width] duration-300",
+                isMenuOpen || isScrolled
+                  ? "w-16 sm:w-14 lg:w-20"
+                  : "w-24 sm:w-28 lg:w-40 xl:w-32",
+              )}
             >
-              <figure
-                className={cn(
-                  "logo opacity-100 transition-[width] duration-300",
-                  isMenuOpen || isScrolled
-                    ? "w-16 sm:w-14 lg:w-20"
-                    : "w-24 sm:w-28 lg:w-40 xl:w-32",
-                )}
-              >
-                <Image
-                  src={LOGO.src}
-                  alt={LOGO.alt}
-                  width={120}
-                  height={48}
-                  className="h-auto w-full"
-                  priority
-                />
-              </figure>
-            </Link>
-          </div>
+              <Image
+                src={LOGO.src}
+                alt={LOGO.alt}
+                width={120}
+                height={48}
+                className="h-auto w-full"
+                priority
+              />
+            </figure>
+          </Link>
+        </div>
 
-          <div className="flex flex-1 items-center justify-end gap-6">
-            <div className="hidden text-smallest sm:block">
-              <ul className="space-y-1 lg:space-y-0">
-                {REVIEW_LINKS.map((review) => (
-                  <li key={review.href}>
-                    <a
-                      href={review.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className={cn(
-                        "flex items-center gap-1 transition",
-                        isMenuOpen || isScrolled
-                          ? "text-brand/80 hover:text-brand"
-                          : "text-light hover:text-light/80",
-                      )}
-                    >
-                      <span>{review.score}</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        aria-hidden="true"
-                        className="h-3.5 w-3.5"
-                      >
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                      </svg>
-                      <span>/</span>
-                      <span>{review.descriptor}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
+        <div className="flex flex-1 items-center justify-end xl:items-start">
+          <nav className="flex items-center justify-end xl:items-start">
             <a
               href={CTA_LINK.href}
               target="_blank"
               rel="noreferrer"
-              className="rounded-asymetrical border border-brand bg-brand px-6 py-2 text-smallest font-medium leading-none text-light transition-colors duration-300 hover:bg-transparent hover:text-brand"
+              className={cn(
+                "header-animation-target rounded-asymetrical py-2 px-6 text-normal leading-none transition-colors duration-300 sm:py-4 lg:px-8",
+                isMenuOpen || isScrolled
+                  ? "border border-brand bg-transparent text-brand hover:bg-brand hover:text-light"
+                  : "border border-brand bg-brand text-light hover:bg-transparent hover:text-brand",
+              )}
             >
               <span className="sm:hidden">Book</span>
-              <span className="hidden sm:inline">{CTA_LINK.label}</span>
+              <span className="hidden sm:inline-block">{CTA_LINK.label}</span>
             </a>
-          </div>
+          </nav>
         </div>
       </div>
 
@@ -338,7 +346,7 @@ export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
             <div className="app-container flex flex-col gap-16 xl:flex-row xl:gap-24 xl:px-10">
               <div className="flex flex-col gap-12 xl:w-1/3">
                 <div>
-                  <p className="text-smallest font-medium uppercase tracking-[0.4em] text-brand/60">
+                  <p className="text-largest font-medium uppercase tracking-[0.4em] text-brand/60">
                     Navigate
                   </p>
                   <ul className="mt-6 grid gap-x-8 gap-y-4 text-2xl font-light uppercase tracking-[0.2em] sm:grid-cols-2 xl:block xl:space-y-3 xl:text-3xl">
@@ -356,10 +364,10 @@ export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
 
                 {secondaryColumn.length > 0 ? (
                   <div>
-                    <p className="text-smallest font-medium uppercase tracking-[0.4em] text-brand/60">
+                    <p className="text-largest font-medium uppercase tracking-[0.4em] text-brand/60">
                       Discover
                     </p>
-                    <ul className="mt-6 space-y-3 text-2xl font-light uppercase tracking-[0.2em] xl:text-3xl">
+                    <ul className="mt-6 space-y-1 text-2xl font-light uppercase tracking-[0.2em] xl:text-3xl">
                       {secondaryColumn.map((item) => (
                         <li key={item.href}>
                           <NavAnchor
@@ -376,7 +384,7 @@ export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
 
               <div className="flex flex-col gap-12 xl:w-1/3">
                 <div>
-                  <p className="text-smallest font-medium uppercase tracking-[0.4em] text-brand/60">
+                  <p className="text-largest font-medium uppercase tracking-[0.4em] text-brand/60">
                     Explore
                   </p>
                   <ul className="mt-6 grid gap-3 text-sm uppercase tracking-[0.3em] text-brand/80 sm:grid-cols-2">
@@ -393,10 +401,10 @@ export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
                 </div>
 
                 <div>
-                  <p className="text-smallest font-medium uppercase tracking-[0.4em] text-brand/60">
+                  <p className="text-largest font-medium uppercase tracking-[0.4em] text-brand/60">
                     Contact
                   </p>
-                  <ul className="mt-6 space-y-3 text-sm text-brand/80">
+                  <ul className="mt-6 space-y-1 text-sm text-brand/80">
                     {CONTACT_LINKS.map((item) => (
                       <li key={item.href}>
                         <NavAnchor
@@ -410,10 +418,10 @@ export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
                 </div>
 
                 <div>
-                  <p className="text-smallest font-medium uppercase tracking-[0.4em] text-brand/60">
+                  <p className="text-largest font-medium uppercase tracking-[0.4em] text-brand/60">
                     Reviews
                   </p>
-                  <ul className="mt-6 space-y-3 text-sm text-brand/80">
+                  <ul className="mt-6 space-y-1 text-sm text-brand/80">
                     {REVIEW_LINKS.map((review) => (
                       <li key={review.href}>
                         <a
@@ -496,27 +504,31 @@ function MenuToggleButton({ isOpen, onClick, isScrolled }: MenuToggleButtonProps
       aria-expanded={isOpen}
       aria-controls="site-menu-overlay"
       className={cn(
-        "group relative flex h-14 w-16 items-center justify-center rounded-full border transition focus:outline-none focus-visible:ring-2",
+        "relative group py-5 header-animation-target transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
         isScrolled
-          ? "border-brand/20 bg-brand/5 text-brand hover:border-brand/40 hover:bg-brand/10 focus-visible:ring-brand/60"
-          : "border-white/20 bg-white/10 text-light hover:border-white/40 hover:bg-white/10 focus-visible:ring-white/70",
+          ? "text-brand focus-visible:ring-brand/60"
+          : "text-light focus-visible:ring-white/70",
       )}
     >
       <span className="sr-only">{isOpen ? "Close menu" : "Open menu"}</span>
       <span
         aria-hidden="true"
-        className="relative block h-3 w-16"
+        className="relative block h-3 w-16 lines"
       >
         <span
           className={cn(
-            "absolute left-0 top-0 h-0.5 w-8 rounded-full bg-current transition-all duration-300 group-hover:w-11/12",
-            isOpen && "top-1/2 w-full -translate-y-1/2 rotate-45",
+            "absolute left-0 h-0.5 rounded-full bg-current transition-all duration-300",
+            isOpen
+              ? "top-1/2 w-full -translate-y-1/2 rotate-45"
+              : "top-0 w-6 group-hover:w-11/12",
           )}
         />
         <span
           className={cn(
-            "absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-current transition-all duration-300 group-hover:w-full",
-            isOpen && "top-1/2 w-full -translate-y-1/2 -rotate-45",
+            "absolute left-0 h-0.5 rounded-full bg-current transition-all duration-300",
+            isOpen
+              ? "top-1/2 w-full -translate-y-1/2 -rotate-45"
+              : "bottom-0 w-full group-hover:w-11/12",
           )}
         />
       </span>

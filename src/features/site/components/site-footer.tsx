@@ -11,6 +11,11 @@ type SiteFooterProps = {
   social: SiteContent["meta"]["social"];
 };
 
+type FeaturedBadge = {
+  src: string;
+  alt: string;
+};
+
 const EXPLORE_LINKS = [
   { label: "Home", href: "/" },
   { label: "Villas", href: "/rooms" },
@@ -83,7 +88,7 @@ const FEATURED_BADGES = [
     src: "https://images.prismic.io/ulaman/Z9vXJTiBA97GisWj_Hotellogoblack.png?auto=format,compress",
     alt: "World Luxury Hotel Awards Ulaman Bali",
   },
-] as const;
+] as const satisfies readonly FeaturedBadge[];
 
 const PACKAGES_TICKER = [
   {
@@ -102,7 +107,7 @@ type FooterNavItem = {
   external?: boolean;
 };
 
-export function SiteFooter({ footer, social }: SiteFooterProps) {
+export function SiteFooter({ footer: _footer, social }: SiteFooterProps) {
   const exploreLinks = useMemo<FooterNavItem[]>(
     () => [...EXPLORE_LINKS],
     [],
@@ -120,7 +125,7 @@ export function SiteFooter({ footer, social }: SiteFooterProps) {
     [social],
   );
 
-  const doubledBadges = useMemo(
+  const doubledBadges = useMemo<readonly FeaturedBadge[]>(
     () => [...FEATURED_BADGES, ...FEATURED_BADGES],
     [],
   );
@@ -194,9 +199,10 @@ export function SiteFooter({ footer, social }: SiteFooterProps) {
           <BadgeMarquee badges={FEATURED_BADGES} doubledBadges={doubledBadges} />
         </section>
 
+        <LegalFooter />
+
         <PackageTicker tickerGroups={tickerGroups} />
-        <LegalFooter footer={footer} />
-      </div>
+        </div>
     </footer>
   );
 }
@@ -390,34 +396,43 @@ function PackageTicker({
   );
 }
 
-function LegalFooter({ footer }: { footer: SiteFooterProps["footer"] }) {
+function LegalFooter() {
   return (
-    <footer className="app-container pt-20">
+    <footer className="app-container py-20">
       <nav>
-        <ul className="flex flex-wrap justify-between gap-x-1 gap-y-4">
+        <ul className="flex flex-row flex-wrap justify-between gap-x-1 gap-y-4">
           <li>
-            <FooterLink label="Terms" href="/legal/terms" />
+            <Link href="/legal/terms" className="text-smallest ui-underline-anim">
+              Terms
+            </Link>
           </li>
           <li>
-            <FooterLink label="Privacy" href="/legal/privacy-policy" />
+            <Link href="/legal/privacy-policy" className="text-smallest ui-underline-anim">
+              Privacy
+            </Link>
           </li>
           <li>
-            <FooterLink label="Ulaman Bookings" href="/contact/ulaman-bookings" />
+            <Link href="/contact/ulaman-bookings" className="text-smallest ui-underline-anim">
+              Ulaman Bookings
+            </Link>
           </li>
           <li>
-            <span className="text-smallest">{footer.legal}</span>
+            <span className="text-smallest">Kids under 6 are not advised.</span>
           </li>
           <li>
-            <span className="text-smallest">{footer.copyright}</span>
+            <span className="text-smallest">
+              &copy; 2024-2025 Two Moons Studio for ulamanbali.com. All Rights Reserved
+            </span>
           </li>
           <li className="order-3">
             <a
               href="https://www.twomoonsstudio.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-smallest ui-underline-anim"
+              className="text-smallest no-heart-color ui-underline-anim"
             >
-              Made With ❤︎ By <span className="opacity-100">Two Moons Studio</span>
+              Made With <span aria-hidden="true">{"\u2764"}</span> By{" "}
+              <span className="opacity-100">Two Moons Studio</span>
             </a>
           </li>
         </ul>

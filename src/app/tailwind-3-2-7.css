@@ -2078,6 +2078,14 @@ button.rounded-asymetrical {
   --tw-translate-y: 100%;
 }
 
+.rotate-45 {
+  transform: rotate(45deg);
+}
+
+.-rotate-45 {
+  transform: rotate(-45deg);
+}
+
 .-rotate-90 {
   --tw-rotate: -90deg;
 }
