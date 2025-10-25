@@ -1170,6 +1170,10 @@ button.rounded-asymetrical {
   z-index: 90;
 }
 
+.z-\[105\] {
+  z-index: 105;
+}
+
 .z-last {
   z-index: 99999999;
 }
@@ -1458,6 +1462,10 @@ button.rounded-asymetrical {
 
 .h-0 {
   height: 0;
+}
+
+.h-\[100vh\] {
+  height: 100vh;
 }
 
 .h-0\.5 {
@@ -1801,6 +1809,10 @@ button.rounded-asymetrical {
 
 .max-w-0 {
   max-width: 0;
+}
+
+.max-w-\[45\%\] {
+  max-width: 45%;
 }
 
 .max-w-160 {
