@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "siteName": "Ulaman Eco-Luxury Retreat",
+    "mission": "Regenerative architecture, mindful wellness, and immersive design in the heart of Bali.",
+    "tagline": "A sanctuary where recycled bamboo, hand-carved stone, and living water shape every detail.",
+    "contactEmail": "reservations@ulamanbaliexperience.com",
+    "phone": "+62 361 123 4567",
+    "address": "Banjar Biyahan, Tabanan Regency, Bali 82121",
+    "social": [
+      { "platform": "Instagram", "href": "https://www.instagram.com/ulaman.ecoretreat" },
+      { "platform": "Facebook", "href": "https://www.facebook.com/ulamanretreat" },
+      { "platform": "YouTube", "href": "https://www.youtube.com/@ulamanretreat" }
+    ]
+  },
+  "navigation": [
+    { "label": "Home", "href": "#hero" },
+    { "label": "Experiences", "href": "#experiences" },
+    { "label": "Residences", "href": "#residences" },
+    { "label": "Wellness", "href": "#wellness" },
+    { "label": "Stories", "href": "#stories" },
+    { "label": "Contact", "href": "#contact" }
+  ],
+  "hero": {
+    "id": "hero",
+    "eyebrow": "ULAMAN ECO-LUXURY RETREAT",
+    "headline": "Return to nature in regenerative luxury.",
+    "subheadline": "A sanctuary suspended between handcrafted architecture, biodiverse jungle, and the rhythms of flowing water.",
+    "description": "Crafted with reclaimed materials and guided by permaculture, Ulaman invites you to feel the cadence of Bali through villas carved into the canopy, a gravity-defying bamboo lounge, and holistic rituals led by local healers.",
+    "video": {
+      "poster": "https://images.unsplash.com/photo-1524492412937-b28074a5d7da",
+      "sources": [
+        {
+          "src": "https://storage.googleapis.com/coverr-main/mp4/Misty-Rainforest.mp4",
+          "type": "video/mp4"
+        }
+      ]
+    },
+    "ctas": [
+      { "label": "Explore the Retreat", "href": "#residences", "variant": "primary" },
+      { "label": "View Wellness Journey", "href": "#wellness", "variant": "secondary" }
+    ],
+    "meta": {
+      "location": "Tabanan, Bali — Indonesia",
+      "coordinates": "8.5073° S · 115.0862° E",
+      "weatherTagline": "28°C · Gentle breeze from the rice terraces"
+    }
+  },
+  "parallaxSlices": [
+    {
+      "id": "architecture",
+      "title": "Regenerative Architecture",
+      "subtitle": "Designed with bamboo, earth, and zero concrete foundations.",
+      "copy": "Every structure curves with the land, aerodynamically bending sound and air to keep the retreat naturally cooled. Award-winning bamboo domes and earth-bag villas were crafted by Balinese artisans, celebrating biomimicry and local craftsmanship.",
+      "media": {
+        "src": "https://images.unsplash.com/photo-1523475472560-d2df97ec485c",
+        "alt": "Sculptural bamboo architecture in the jungle",
+        "width": 1600,
+        "height": 2400
+      },
+      "depth": 20
+    },
+    {
+      "id": "water",
+      "title": "Living Water Sanctuary",
+      "subtitle": "A cascade of natural pools, waterfalls, and healing hydrotherapy.",
+      "copy": "Fed by spring water and mineralized stone, the hydrotherapy circuit, floating yoga deck, and river lounge curate a multisensory journey designed to restore nervous system balance.",
+      "media": {
+        "src": "https://images.unsplash.com/photo-1505764706515-aa95265c5abc",
+        "alt": "Infinity pool overlooking Balinese rice terraces",
+        "width": 2048,
+        "height": 1365
+      },
+      "depth": 35
+    },
+    {
+      "id": "wellness",
+      "title": "Holistic Wellness & Rituals",
+      "subtitle": "Curated by resident healers and visiting practitioners.",
+      "copy": "Sunrise sound ceremonies, cacao-infused breathwork, and Balinese herbal apothecary treatments are tailored to regulate circadian rhythm and unlock deep rest.",
+      "media": {
+        "src": "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2",
+        "alt": "Wellness ritual with singing bowls in Bali",
+        "width": 1600,
+        "height": 900
+      },
+      "depth": 50
+    }
+  ],
+  "highlights": [
+    {
+      "id": "permaculture",
+      "title": "Living Permaculture",
+      "copy": "Hydroponic gardens, rewilded rice terraces, and organic kitchens that spotlight Balinese ingredients.",
+      "icon": "leaf"
+    },
+    {
+      "id": "energy",
+      "title": "Closed-Loop Energy",
+      "copy": "Micro-hydro power, solar arrays, and waste-to-resource systems keep the retreat off-grid ready.",
+      "icon": "spark"
+    },
+    {
+      "id": "design",
+      "title": "Immersive Design",
+      "copy": "Spatial acoustics, biomorphic lighting, and sightlines curated to mimic rainforest layers.",
+      "icon": "wave"
+    }
+  ],
+  "articles": [
+    {
+      "id": "the-bamboo-renaissance",
+      "title": "Designing the Bamboo Renaissance",
+      "excerpt": "How Ulaman collaborated with IBUKU to sculpt open-air spaces that breathe with the jungle.",
+      "href": "/stories/bamboo-renaissance",
+      "readingTime": "6 min read",
+      "category": "Architecture",
+      "image": {
+        "src": "https://images.unsplash.com/photo-1519710164239-da123dc03ef4",
+        "alt": "Bamboo dome interior lit with warm light",
+        "width": 1600,
+        "height": 1067
+      },
+      "publishedAt": "2024-06-12"
+    },
+    {
+      "id": "rituals-of-rest",
+      "title": "Rituals of Rest with Resident Healers",
+      "excerpt": "Restorative soundscapes, plant therapies, and somatic movement sequences to recalibrate body and mind.",
+      "href": "/stories/rituals-of-rest",
+      "readingTime": "8 min read",
+      "category": "Wellness",
+      "image": {
+        "src": "https://images.unsplash.com/photo-1540555700478-4be289fbecef",
+        "alt": "Meditation session with natural light",
+        "width": 1600,
+        "height": 1067
+      },
+      "publishedAt": "2024-07-01"
+    },
+    {
+      "id": "mindful-cuisine",
+      "title": "Mindful Cuisine from Garden to Table",
+      "excerpt": "Inside Ulaman's regenerative culinary program featuring zero-waste menus and hyperlocal spices.",
+      "href": "/stories/mindful-cuisine",
+      "readingTime": "5 min read",
+      "category": "Culinary",
+      "image": {
+        "src": "https://images.unsplash.com/photo-1473093226795-af9932fe5856",
+        "alt": "Gourmet plant-based dish served on stoneware",
+        "width": 1600,
+        "height": 1000
+      },
+      "publishedAt": "2024-04-18"
+    }
+  ],
+  "offerings": [
+    {
+      "id": "canopy-villas",
+      "title": "Canopy Villas",
+      "description": "Suspended above the river, the canopy villas blend curved bamboo architecture with sky bridges and wrap-around decks for uninterrupted jungle immersion.",
+      "features": [
+        "Infinity plunge pool with mineralized water",
+        "Handwoven bamboo canopy bed",
+        "360° acoustic sound design"
+      ],
+      "image": {
+        "src": "https://images.unsplash.com/photo-1533000971552-6a962ff0b9fc",
+        "alt": "Luxury villa overlooking lush tropical forest",
+        "width": 1600,
+        "height": 1000
+      },
+      "startingRate": "USD 540 per night",
+      "tag": "Signature Villa"
+    },
+    {
+      "id": "earth-retreats",
+      "title": "Earth Retreats",
+      "description": "Earth-bag sanctuaries shaped with rammed earth and river stone to regulate temperature naturally and ground the senses.",
+      "features": [
+        "Private meditation courtyard",
+        "Rain shower carved into lava stone",
+        "In-room apothecary bar"
+      ],
+      "image": {
+        "src": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+        "alt": "Earth-toned minimalist villa interior",
+        "width": 1600,
+        "height": 1067
+      },
+      "startingRate": "USD 420 per night",
+      "tag": "Couples Escape"
+    },
+    {
+      "id": "river-residence",
+      "title": "River Residences",
+      "description": "Expansive multi-level residences with private cinema, hydrotherapy deck, and chef's kitchen for curated gatherings.",
+      "features": [
+        "Private butler and wellness concierge",
+        "Rainforest-facing hydrotherapy pool",
+        "Dedicated movement studio"
+      ],
+      "image": {
+        "src": "https://images.unsplash.com/photo-1523362628745-0c100150b504",
+        "alt": "Modern residence with open living area",
+        "width": 1600,
+        "height": 1067
+      },
+      "startingRate": "USD 980 per night",
+      "tag": "Group Sanctuary"
+    }
+  ],
+  "footer": {
+    "sections": [
+      {
+        "title": "Stay",
+        "items": [
+          { "label": "Canopy Villas", "href": "/residences/canopy" },
+          { "label": "Earth Retreats", "href": "/residences/earth" },
+          { "label": "River Residences", "href": "/residences/river" }
+        ]
+      },
+      {
+        "title": "Experience",
+        "items": [
+          { "label": "Wellness Rituals", "href": "/wellness" },
+          { "label": "Culinary Journey", "href": "/culinary" },
+          { "label": "Sustainability Lab", "href": "/sustainability" }
+        ]
+      },
+      {
+        "title": "About",
+        "items": [
+          { "label": "Our Story", "href": "/about" },
+          { "label": "Press & Awards", "href": "/press" },
+          { "label": "Contact", "href": "/contact" }
+        ]
+      }
+    ],
+    "legal": "2025 Mind Interactive Media. All rights reserved. This concept experience is part of the Front End Test Batch October25.",
+    "copyright": "© 2025 Ulaman Eco-Luxury Retreat."
+  }
+}
