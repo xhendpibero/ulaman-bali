@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -12,26 +12,49 @@ const CURTAIN_IMAGES = [
     alt: "Reiki healing ritual at Ulaman",
     topClass: "top-10",
     direction: 1,
-    initialRotation: 0,
-    finalRotation: 1,
+    initialRotation: 4,
+    finalRotation: 8,
   },
   {
     src: "https://images.prismic.io/ulaman/ZiPZhfPdc1huKp0x_eco-retreat.jpg?auto=format,compress",
     alt: "Guests gathering at Ulaman eco retreat",
     topClass: "-top-10",
     direction: -1,
-    initialRotation: 0,
-    finalRotation: -1,
+    initialRotation: -4,
+    finalRotation: -8,
   },
 ] as const;
 
 const INITIAL_SHIFT_PX = 80;
 const FINAL_SHIFT_PX = 460;
+const CURTAIN_EASING = 0.12;
+const CURTAIN_EPSILON = 0.001;
 
 export function CurtainRevealSlice() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const frameRef = useRef<number>();
-  const [progress, setProgress] = useState(0);
+  const animationRef = useRef<number>();
+  const targetProgressRef = useRef(0);
+  const displayRef = useRef(0);
+  const [displayProgress, setDisplayProgress] = useState(0);
+
+  const step = useCallback(() => {
+    const target = targetProgressRef.current;
+    const current = displayRef.current;
+    const delta = target - current;
+
+    if (Math.abs(delta) < CURTAIN_EPSILON) {
+      displayRef.current = target;
+      setDisplayProgress(target);
+      animationRef.current = undefined;
+      return;
+    }
+
+    const next = current + delta * CURTAIN_EASING;
+    displayRef.current = next;
+    setDisplayProgress(next);
+    animationRef.current = window.requestAnimationFrame(step);
+  }, []);
 
   useEffect(() => {
     const updateProgress = () => {
@@ -45,7 +68,10 @@ export function CurtainRevealSlice() {
       const rawProgress = (windowHeight - rect.top) / totalScrollable;
       const clamped = Math.min(Math.max(rawProgress * 2, 0), 1);
 
-      setProgress(clamped);
+      targetProgressRef.current = clamped;
+      if (!animationRef.current) {
+        animationRef.current = window.requestAnimationFrame(step);
+      }
       frameRef.current = undefined;
     };
 
@@ -66,8 +92,11 @@ export function CurtainRevealSlice() {
       if (frameRef.current !== undefined) {
         window.cancelAnimationFrame(frameRef.current);
       }
+      if (animationRef.current !== undefined) {
+        window.cancelAnimationFrame(animationRef.current);
+      }
     };
-  }, []);
+  }, [step]);
 
   return (
     <section
@@ -82,10 +111,10 @@ export function CurtainRevealSlice() {
             const shift =
               image.direction *
               (INITIAL_SHIFT_PX +
-                (FINAL_SHIFT_PX - INITIAL_SHIFT_PX) * progress);
+                (FINAL_SHIFT_PX - INITIAL_SHIFT_PX) * displayProgress);
             const rotation =
               image.initialRotation +
-              (image.finalRotation - image.initialRotation) * progress;
+              (image.finalRotation - image.initialRotation) * displayProgress;
 
             return (
               <figure

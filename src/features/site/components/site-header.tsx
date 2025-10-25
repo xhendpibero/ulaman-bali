@@ -154,6 +154,7 @@ const GALLERY_IMAGES = [
 export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const overlayLinks = useMemo<OverlayLink[]>(() => {
     const merged: OverlayLink[] = [...MENU_BASE_LINKS];
@@ -197,6 +198,19 @@ export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
   const handleToggleMenu = () => setIsMenuOpen((open) => !open);
   const handleCloseMenu = () => setIsMenuOpen(false);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY > 12;
+      setIsScrolled(scrolled);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <header
       id="header"
@@ -204,20 +218,33 @@ export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
     >
       <div
         className={cn(
-          "pointer-events-auto border-b border-brand/20 bg-light-background text-brand transition-[background-color,border-color] duration-300",
-          isMenuOpen && "bg-light text-brand",
+          "pointer-events-auto transition-[background-color,border-color,color] duration-300",
+          isMenuOpen
+            ? "border-b border-brand/20 bg-light text-brand"
+            : isScrolled
+              ? "border-b border-brand/20 bg-light-background text-brand"
+              : "border-b border-transparent bg-transparent text-light",
         )}
       >
         <div className="app-container flex items-center justify-between py-2 sm:py-4 lg:px-8 xl:px-10">
           <div className="flex flex-1 items-center gap-10 lg:gap-14">
-            <MenuToggleButton isOpen={isMenuOpen} onClick={handleToggleMenu} />
+            <MenuToggleButton
+              isOpen={isMenuOpen}
+              onClick={handleToggleMenu}
+              isScrolled={isMenuOpen || isScrolled}
+            />
 
             <nav className="hidden items-center gap-9 xl:flex">
               {PRIMARY_LINKS.map((item) => (
                 <NavAnchor
                   key={item.href}
                   {...item}
-                  className="ui-underline-anim text-smaller tracking-wide transition hover:text-brand/70"
+                  className={cn(
+                    "ui-underline-anim text-smaller tracking-wide transition",
+                    isMenuOpen || isScrolled
+                      ? "text-brand hover:text-brand/70"
+                      : "text-light hover:text-light/80",
+                  )}
                 />
               ))}
             </nav>
@@ -229,7 +256,14 @@ export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
               aria-label={siteName}
               className="transition-opacity duration-300 hover:opacity-80"
             >
-              <figure className="w-16 opacity-100 transition-[width] duration-300 sm:w-14 lg:w-20">
+              <figure
+                className={cn(
+                  "logo opacity-100 transition-[width] duration-300",
+                  isMenuOpen || isScrolled
+                    ? "w-16 sm:w-14 lg:w-20"
+                    : "w-24 sm:w-28 lg:w-40 xl:w-32",
+                )}
+              >
                 <Image
                   src={LOGO.src}
                   alt={LOGO.alt}
@@ -244,14 +278,19 @@ export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
 
           <div className="flex flex-1 items-center justify-end gap-6">
             <div className="hidden text-smallest sm:block">
-              <ul className="space-y-1 text-brand/80 lg:space-y-0 lg:text-inherit">
+              <ul className="space-y-1 lg:space-y-0">
                 {REVIEW_LINKS.map((review) => (
                   <li key={review.href}>
                     <a
                       href={review.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center gap-1 transition hover:text-brand"
+                      className={cn(
+                        "flex items-center gap-1 transition",
+                        isMenuOpen || isScrolled
+                          ? "text-brand/80 hover:text-brand"
+                          : "text-light hover:text-light/80",
+                      )}
                     >
                       <span>{review.score}</span>
                       <svg
@@ -446,16 +485,22 @@ export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
 type MenuToggleButtonProps = {
   isOpen: boolean;
   onClick: () => void;
+  isScrolled: boolean;
 };
 
-function MenuToggleButton({ isOpen, onClick }: MenuToggleButtonProps) {
+function MenuToggleButton({ isOpen, onClick, isScrolled }: MenuToggleButtonProps) {
   return (
     <button
       type="button"
       onClick={onClick}
       aria-expanded={isOpen}
       aria-controls="site-menu-overlay"
-      className="group relative flex h-14 w-16 items-center justify-center rounded-full border border-brand/20 bg-brand/5 transition hover:border-brand/40 hover:bg-brand/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+      className={cn(
+        "group relative flex h-14 w-16 items-center justify-center rounded-full border transition focus:outline-none focus-visible:ring-2",
+        isScrolled
+          ? "border-brand/20 bg-brand/5 text-brand hover:border-brand/40 hover:bg-brand/10 focus-visible:ring-brand/60"
+          : "border-white/20 bg-white/10 text-light hover:border-white/40 hover:bg-white/10 focus-visible:ring-white/70",
+      )}
     >
       <span className="sr-only">{isOpen ? "Close menu" : "Open menu"}</span>
       <span

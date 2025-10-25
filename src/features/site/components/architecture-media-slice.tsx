@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const BACKGROUND_IMAGE =
   "https://images.prismic.io/ulaman/ZpZPRh5LeNNTxMAj_ulaman.jpg?auto=format,compress";
@@ -10,11 +10,34 @@ const INITIAL_RADIUS = 1024;
 const FINAL_RADIUS = 0;
 const INITIAL_SHIFT = -800;
 const FINAL_SHIFT = 1080;
+const EASING = 0.12;
+const EPSILON = 0.001;
 
 export function ArchitectureMediaSlice() {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const frameRef = useRef<number>();
-  const [progress, setProgress] = useState(0);
+  const animationRef = useRef<number>();
+  const targetProgressRef = useRef(0);
+  const displayRef = useRef(0);
+  const [displayProgress, setDisplayProgress] = useState(0);
+
+  const step = useCallback(() => {
+    const target = targetProgressRef.current;
+    const current = displayRef.current;
+    const delta = target - current;
+
+    if (Math.abs(delta) < EPSILON) {
+      displayRef.current = target;
+      setDisplayProgress(target);
+      animationRef.current = undefined;
+      return;
+    }
+
+    const next = current + delta * EASING;
+    displayRef.current = next;
+    setDisplayProgress(next);
+    animationRef.current = window.requestAnimationFrame(step);
+  }, []);
 
   useEffect(() => {
     const updateProgress = () => {
@@ -27,8 +50,10 @@ export function ArchitectureMediaSlice() {
       const totalScrollable = rect.height + windowHeight;
       const rawProgress = (windowHeight - rect.top) / totalScrollable;
       const clamped = Math.min(Math.max(rawProgress, 0), 1);
-
-      setProgress(clamped);
+      targetProgressRef.current = clamped;
+      if (!animationRef.current) {
+        animationRef.current = window.requestAnimationFrame(step);
+      }
       frameRef.current = undefined;
     };
 
@@ -49,21 +74,24 @@ export function ArchitectureMediaSlice() {
       if (frameRef.current !== undefined) {
         window.cancelAnimationFrame(frameRef.current);
       }
+      if (animationRef.current !== undefined) {
+        window.cancelAnimationFrame(animationRef.current);
+      }
     };
-  }, []);
+  }, [step]);
 
   const animatedWidth =
     INITIAL_WIDTH_PERCENT +
-    (FINAL_WIDTH_PERCENT - INITIAL_WIDTH_PERCENT) * progress;
+    (FINAL_WIDTH_PERCENT - INITIAL_WIDTH_PERCENT) * displayProgress;
 
   const animatedRadius = `${
-    INITIAL_RADIUS + (FINAL_RADIUS - INITIAL_RADIUS) * progress
+    INITIAL_RADIUS + (FINAL_RADIUS - INITIAL_RADIUS) * displayProgress
   }px ${
-    INITIAL_RADIUS + (FINAL_RADIUS - INITIAL_RADIUS) * progress
+    INITIAL_RADIUS + (FINAL_RADIUS - INITIAL_RADIUS) * displayProgress
   }px 0 0`;
 
   const animatedShift =
-    INITIAL_SHIFT + (FINAL_SHIFT - INITIAL_SHIFT) * progress;
+    INITIAL_SHIFT + (FINAL_SHIFT - INITIAL_SHIFT) * displayProgress;
 
   return (
     <section
