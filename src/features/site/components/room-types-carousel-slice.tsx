@@ -60,7 +60,7 @@ const ROOM_TYPES: RoomType[] = [
       </>
     ),
     image: {
-      src: "https://images.prismic.io/ulaman/ZjNkmEMTzAJOCfQK_best-resort-in-bali-ulaman.jpg?auto=format,compress",
+      src: "https://images.prismic.io/ulaman/Zpct2h5LeNNTxOAy_skyvilla.jpg?auto=format,compress",
       alt: "Avatar tree house villa suspended above the jungle",
     },
   },
@@ -87,7 +87,7 @@ const ROOM_TYPES: RoomType[] = [
       </>
     ),
     image: {
-      src: "https://images.prismic.io/ulaman/Zlfr2iWtHYXtT64u_balivillas_ulaman.jpg?auto=format,compress",
+      src: "https://images.prismic.io/ulaman/ZpH1_h5LeNNTxIQh_grand-lagoon.jpg?auto=format,compress",
       alt: "Jungle garden pool villa with lush landscaping",
     },
   },
@@ -109,7 +109,7 @@ const ROOM_TYPES: RoomType[] = [
 
 export function RoomTypesCarouselSlice() {
   return (
-    <section data-slice-type="room_types_carousel" data-slice-variation="withTitle">
+    <section className="space-y-10 sm:space-y-11 lg:space-y-16" data-slice-type="room_types_carousel" data-slice-variation="withTitle">
       <header className="app-container">
         <div className="mx-auto max-w-[31.25rem] space-y-5 sm:space-y-6 lg:max-w-[40rem] xl:space-y-5">
           <div className="space-y-em text-center" id="room-types-headline">
@@ -146,7 +146,7 @@ export function RoomTypesCarouselSlice() {
                     className="group min-w-0 shrink-0 grow-0 basis-auto pb-1 pl-4 sm:pl-7 last:pr-6"
                   >
                     <Link href={room.href} className="block">
-                      <article className="-mr-7 pl-6 sm:m-0 sm:p-0">
+                      <article className="-mr-7 pl-6 group-last:pr-6 sm:mr-0 sm:p-0">
                         <div className="w-88 space-y-4 lg:w-112">
                           <figure className="group relative aspect-[10/14] overflow-hidden rounded-md xl:aspect-[10/13]">
                             <div className="rounded-inherit">

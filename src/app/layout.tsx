@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import type { ReactNode } from "react";
 
 import Providers from "./providers";
 
 import "./globals.css";
+import "./tailwind-3-2-7.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,6 +18,80 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const basisGrotesque = localFont({
+  src: [
+    {
+      path: "../fonts/BasisGrotesquePro/BasisGrotesquePro-Light.woff2",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../fonts/BasisGrotesquePro/BasisGrotesquePro-Light.woff",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../fonts/BasisGrotesquePro/BasisGrotesquePro-Light.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../fonts/BasisGrotesquePro/BasisGrotesquePro-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/BasisGrotesquePro/BasisGrotesquePro-Regular.woff",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/BasisGrotesquePro/BasisGrotesquePro-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/BasisGrotesquePro/BasisGrotesquePro-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../fonts/BasisGrotesquePro/BasisGrotesquePro-Bold.woff",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../fonts/BasisGrotesquePro/BasisGrotesquePro-Bold.otf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-basis-grotesque",
+  display: "swap",
+});
+
+const americana = localFont({
+  src: [
+    {
+      path: "../fonts/Americana/Americana-BT.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/Americana/Americana-BT.woff",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/Americana/Americana-BT.otf",
+      weight: "400",
+      style: "normal",
+    },
+  ],
+  variable: "--font-americana",
   display: "swap",
 });
 
@@ -80,7 +156,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-stone-950 text-stone-100 antialiased bg-light-background`}
+        className={`${geistSans.variable} ${geistMono.variable} ${basisGrotesque.variable} ${americana.variable} bg-stone-950 text-stone-100 antialiased bg-light-background`}
       >
         <Script id="cleanup-fdprocessedid" strategy="beforeInteractive">
           {`(function(){if(typeof document==="undefined"){return;}var removeAttrs=function(root){if(!root||!root.querySelectorAll){return;}var nodes=root.querySelectorAll("[fdprocessedid]");for(var i=0;i<nodes.length;i+=1){nodes[i].removeAttribute("fdprocessedid");}};removeAttrs(document);var observer=new MutationObserver(function(mutations){for(var i=0;i<mutations.length;i+=1){var mutation=mutations[i];if(mutation.type==="attributes"&&mutation.attributeName==="fdprocessedid"&&mutation.target&&mutation.target.removeAttribute){mutation.target.removeAttribute("fdprocessedid");}if(mutation.type==="childList"){for(var j=0;j<mutation.addedNodes.length;j+=1){var node=mutation.addedNodes[j];if(node&&node.nodeType===1){if(node.hasAttribute&&node.hasAttribute("fdprocessedid")){node.removeAttribute("fdprocessedid");}removeAttrs(node);}}}}});observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:["fdprocessedid"]});})()`}
