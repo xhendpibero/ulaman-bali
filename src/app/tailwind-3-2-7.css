@@ -1815,6 +1815,10 @@ button.rounded-asymetrical {
   max-width: 45%;
 }
 
+.max-w-\[72vw\] {
+  max-width: 72vw;
+}
+
 .max-w-160 {
   max-width: 40rem;
 }

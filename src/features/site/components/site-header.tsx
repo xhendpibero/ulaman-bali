@@ -218,7 +218,7 @@ export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
     >
       <div
         className={cn(
-          "pointer-events-auto relative z-50 flex app-container py-2 transition-[background-color,border-color,color] duration-300 sm:py-4 lg:items-center lg:justify-between lg:px-8 xl:max-w-unset xl:px-10",
+          "pointer-events-auto relative z-50 w-full flex app-container py-2 transition-[background-color,border-color,color] duration-300 sm:py-4 lg:items-center lg:justify-between lg:px-8 xl:max-w-unset xl:px-10",
           isMenuOpen
             ? "border-b-[0.9px] border-brand/20 bg-light text-brand"
             : isScrolled

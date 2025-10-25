@@ -123,9 +123,11 @@ export function RoomTypesCarouselSlice() {
 
     const { scrollLeft, scrollWidth, clientWidth } = container;
     const maxScroll = Math.max(scrollWidth - clientWidth, 0);
+    const epsilon = 2;
+    const hasOverflow = maxScroll > epsilon;
 
-    setCanScrollPrev(scrollLeft > 0);
-    setCanScrollNext(scrollLeft < maxScroll - 1);
+    setCanScrollPrev(hasOverflow && scrollLeft > epsilon);
+    setCanScrollNext(hasOverflow && scrollLeft < maxScroll - epsilon);
   }, []);
 
   const handleScrollBy = useCallback(
@@ -135,8 +137,26 @@ export function RoomTypesCarouselSlice() {
         return;
       }
 
-      const offset = direction === "prev" ? -80 : 80;
-      container.scrollBy({ left: offset, behavior: "smooth" });
+      const children = Array.from(container.children) as HTMLElement[];
+      if (children.length === 0) {
+        return;
+      }
+
+      const currentScroll = container.scrollLeft;
+      const tolerance = 2;
+
+      const targetChild =
+        direction === "next"
+          ? children.find((child) => child.offsetLeft - currentScroll > tolerance)
+          : [...children]
+              .reverse()
+              .find((child) => currentScroll - child.offsetLeft > tolerance);
+
+      const targetScrollLeft =
+        targetChild?.offsetLeft ??
+        (direction === "next" ? container.scrollWidth : 0);
+
+      container.scrollTo({ left: targetScrollLeft, behavior: "smooth" });
       window.requestAnimationFrame(updateScrollState);
     },
   [updateScrollState],
@@ -150,13 +170,32 @@ export function RoomTypesCarouselSlice() {
 
     updateScrollState();
 
-    const handle = () => updateScrollState();
-    container.addEventListener("scroll", handle, { passive: true });
-    window.addEventListener("resize", handle);
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(() => updateScrollState());
+      resizeObserver.observe(container);
+    }
+
+    const imageCleanups: Array<() => void> = [];
+    container.querySelectorAll("img").forEach((img) => {
+      if (img.complete) {
+        updateScrollState();
+        return;
+      }
+      const listener = () => updateScrollState();
+      img.addEventListener("load", listener);
+      imageCleanups.push(() => img.removeEventListener("load", listener));
+    });
+
+    const handleScroll = () => updateScrollState();
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
 
     return () => {
-      container.removeEventListener("scroll", handle);
-      window.removeEventListener("resize", handle);
+      container.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      resizeObserver?.disconnect();
+      imageCleanups.forEach((cleanup) => cleanup());
     };
   }, [updateScrollState]);
 
@@ -198,7 +237,7 @@ export function RoomTypesCarouselSlice() {
           <div className="flex-1">
             <div
               ref={scrollContainerRef}
-              className="flex -ml-4 overflow-x-auto scroll-smooth sm:dir-ltr"
+              className="flex -ml-4 overflow-x-auto hide-scrollbar scroll-smooth sm:dir-ltr max-w-[72vw]"
             >
               {ROOM_TYPES.map((room) => (
                 <div

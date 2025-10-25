@@ -132,7 +132,7 @@ export function PackagesCarouselSlice() {
           <div className="flex-1">
             <div
               ref={scrollContainerRef}
-              className="flex -ml-4 overflow-x-auto scroll-smooth sm:dir-ltr"
+              className="flex -ml-4 overflow-x-auto hide-scrollbar scroll-smooth sm:dir-ltr max-w-[72vw]"
             >
               {PACKAGES.map((item) => (
                 <div
