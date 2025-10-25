@@ -2,47 +2,116 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 const CURTAIN_IMAGES = [
   {
     src: "https://images.prismic.io/ulaman/ZlQ_cik0V36pXpWM_ulaman-eco-resort.jpg?auto=format,compress",
     alt: "Reiki healing ritual at Ulaman",
-    figureClass: "-right-20 top-10 rotate-4",
+    topClass: "top-10",
+    direction: 1,
+    initialRotation: 0,
+    finalRotation: 1,
   },
   {
     src: "https://images.prismic.io/ulaman/ZiPZhfPdc1huKp0x_eco-retreat.jpg?auto=format,compress",
     alt: "Guests gathering at Ulaman eco retreat",
-    figureClass: "-left-20 -top-10 -rotate-4",
+    topClass: "-top-10",
+    direction: -1,
+    initialRotation: 0,
+    finalRotation: -1,
   },
 ] as const;
 
+const INITIAL_SHIFT_PX = 80;
+const FINAL_SHIFT_PX = 460;
+
 export function CurtainRevealSlice() {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const frameRef = useRef<number>();
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const updateProgress = () => {
+      if (!sectionRef.current) {
+        return;
+      }
+
+      const rect = sectionRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight || 1;
+      const totalScrollable = rect.height + windowHeight;
+      const rawProgress = (windowHeight - rect.top) / totalScrollable;
+      const clamped = Math.min(Math.max(rawProgress * 2, 0), 1);
+
+      setProgress(clamped);
+      frameRef.current = undefined;
+    };
+
+    const handleScroll = () => {
+      if (frameRef.current !== undefined) {
+        return;
+      }
+      frameRef.current = window.requestAnimationFrame(updateProgress);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+    updateProgress();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      if (frameRef.current !== undefined) {
+        window.cancelAnimationFrame(frameRef.current);
+      }
+    };
+  }, []);
+
   return (
     <section
       data-slice-type="curtain_reveal"
       data-slice-variation="default"
       className="!mt-28 [&+*]:!mt-0"
+      ref={sectionRef}
     >
       <div className="app-container relative flex w-full max-w-screen items-center justify-center overflow-hidden aspect-screen sm:aspect-auto sm:min-h-[90vh] xl:max-w-unset">
-        <div className="pointer-events-none absolute z-10 flex h-full w-full items-center justify-center py-14 2xl:py-0">
-          {CURTAIN_IMAGES.map((image) => (
-            <figure
-              key={image.src}
-              className={`absolute aspect-[10/14] w-96 rounded-md shadow-xl ${image.figureClass}`}
-            >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                loading="lazy"
-                sizes="(min-width: 1280px) 24rem, 18rem"
-                className="rounded-md object-cover"
-              />
-            </figure>
-          ))}
+        <div className="pointer-events-none absolute z-20 flex h-full w-full items-center justify-center py-14 2xl:py-0">
+          {CURTAIN_IMAGES.map((image) => {
+            const shift =
+              image.direction *
+              (INITIAL_SHIFT_PX +
+                (FINAL_SHIFT_PX - INITIAL_SHIFT_PX) * progress);
+            const rotation =
+              image.initialRotation +
+              (image.finalRotation - image.initialRotation) * progress;
+
+            return (
+              <figure
+                key={image.src}
+                className={cn(
+                  "absolute aspect-[10/14] w-96 rounded-md shadow-xl",
+                  image.topClass,
+                )}
+                style={{
+                  transform: `translateX(${shift}px) translateY(40px) rotate(${rotation}deg)`,
+                }}
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  loading="lazy"
+                  sizes="(min-width: 1280px) 24rem, 18rem"
+                  className="rounded-md object-cover"
+                />
+              </figure>
+            );
+          })}
         </div>
 
-        <div className="relative z-20 mx-auto max-w-md space-y-5 text-center">
+        <div className="relative z-10 mx-auto max-w-md space-y-5 text-center">
           <div className="mx-auto max-w-92 space-y-5 lg:max-w-lg">
             <h4 className="display-4 heading">
               Discover your path to wellness and growth.

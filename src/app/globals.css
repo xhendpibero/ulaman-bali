@@ -100,6 +100,50 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 
+@keyframes marquee-track {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-track 40s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track--slow {
+  animation-duration: 60s;
+}
+
+.transition-\[max-width\] {
+  transition-property: max-width;
+}
+
+.group:hover .group-hover\:max-w-\[220px\] {
+  max-width: 220px;
+}
+
+.group.active_ .\[\.group\.active_\&\]\:max-w-\[220px\] {
+  max-width: 220px;
+}
+
+.group-hover {
+  margin-left: -7px;
+}
+
+.group:hover .group-hover {
+  margin-left: 0px;
+}
+
+.group.active_ .\[\.group\.active_\&\]\:visible {
+  visibility: visible;
+}
+
 .lines[data-v-241a1fe1]:after,
 .lines[data-v-241a1fe1]:before {
   background-color: currentColor;

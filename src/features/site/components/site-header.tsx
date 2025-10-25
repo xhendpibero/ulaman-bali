@@ -12,6 +12,17 @@ type SiteHeaderProps = {
   siteName: string;
 };
 
+type OverlayLink = {
+  label: string;
+  href: string;
+  external?: boolean;
+};
+
+const LOGO = {
+  src: "https://ulaman.cdn.prismic.io/ulaman/aAMlsuvxEdbNPPas_logo-new.svg",
+  alt: "Ulaman Bali",
+};
+
 const PRIMARY_LINKS = [
   { label: "Villas", href: "/rooms" },
   {
@@ -25,16 +36,38 @@ const PRIMARY_LINKS = [
     external: true,
   },
   { label: "Retreats", href: "/retreats" },
-];
+] as const;
 
-const FEATURE_LINKS = [
+const MENU_BASE_LINKS = [
+  { label: "Home", href: "/" },
+  { label: "Villas", href: "/rooms" },
+  { label: "Packages", href: "/packages-ulaman" },
+  {
+    label: "Spa",
+    href: "https://riversidespabyulaman.com/",
+    external: true,
+  },
+  { label: "Retreats", href: "/retreats" },
+  {
+    label: "Dine",
+    href: "https://earthbyulaman.com",
+    external: true,
+  },
+  { label: "Experiences", href: "/activities" },
   { label: "Facilities", href: "/facilities" },
   { label: "Blog", href: "/blog" },
   { label: "Reviews", href: "/testimonials" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
   { label: "The Map", href: "/ulaman-map" },
-];
+] satisfies OverlayLink[];
+
+const FEATURE_LINKS = [
+  { label: "Wellness Journey", href: "/wellness" },
+  { label: "Offers & Packages", href: "/packages-ulaman" },
+  { label: "Journal", href: "/blog" },
+  { label: "Media Coverage", href: "/press" },
+] satisfies OverlayLink[];
 
 const CONTACT_LINKS = [
   {
@@ -42,47 +75,107 @@ const CONTACT_LINKS = [
     href: "mailto:reservations@ulamanbaliexperience.com",
   },
   {
-    label: "+62 361 123 4567",
-    href: "tel:+623611234567",
-  },
-  {
-    label: "Jl. Biyahan, Tabanan Regency, Bali 82121",
-    href: "https://maps.app.goo.gl/bW7S6oWJStTgmu8v6",
+    label: "+62 812-2714-2854",
+    href: "https://wa.me/6281227142854",
     external: true,
   },
-];
+  {
+    label: "Ulaman Road, Buwit, Kediri, Tabanan, Bali",
+    href: "https://www.google.com/maps/dir//Ulaman+Road,+Buwit,+Kediri,+Tabanan+Regency,+Bali+82121",
+    external: true,
+  },
+] satisfies OverlayLink[];
+
+const REVIEW_LINKS = [
+  {
+    score: "4.7",
+    descriptor: "742 Google Reviews",
+    href: "https://www.google.com/travel/search?q=ulaman%20bali&hl=en-ID&gl=id&cs=1&ap=ugEHcmV2aWV3cw",
+  },
+  {
+    score: "4.8",
+    descriptor: "295 Tripadvisor Reviews",
+    href: "https://www.tripadvisor.com/Hotel_Review-g608496-d21058098-Reviews-Ulaman_Eco_Luxury_Retreat-Tabanan_Bali.html",
+  },
+] as const;
+
+const SUPPORT_LINKS = [
+  {
+    label: "Whatsapp",
+    href: "https://wa.me/6281227142854",
+    external: true,
+  },
+  {
+    label: "Directions",
+    href: "https://www.google.com/maps/dir//Ulaman+Road,+Buwit,+Kediri,+Tabanan+Regency,+Bali+82121",
+    external: true,
+  },
+  {
+    label: "TripAdvisor",
+    href: "https://www.tripadvisor.com/Hotel_Review-g608496-d21058098-Reviews-Ulaman_Eco_Luxury_Retreat-Tabanan_Bali.html",
+    external: true,
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/ulamanbali",
+    external: true,
+  },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/UlamanBali/",
+    external: true,
+  },
+] satisfies OverlayLink[];
+
+const CTA_LINK = {
+  label: "Stay With Us",
+  href: "https://booking.ulamanbali.com/book/706/rooms",
+};
 
 const GALLERY_IMAGES = [
   {
-    src: "https://images.prismic.io/ulaman/ZiPocPPdc1huKp2I_Ulaman-bali.jpg?auto=format,compress",
-    alt: "Ulaman Bali entrance",
+    src: "https://images.prismic.io/ulaman/Zjeq0EMTzAJOCirD_hotel.jpg?auto=format,compress",
+    alt: "Ulaman Bali retreat aerial view",
   },
   {
-    src: "https://images.prismic.io/ulaman/ZotMNx5LeNNTw4r1_ulaman.jpg?auto=format,compress",
-    alt: "Infinity pool at sunset Ulaman Bali",
+    src: "https://images.prismic.io/ulaman/ZpH-Kx5LeNNTxIQm_riverside.jpg?auto=format,compress",
+    alt: "Riverside spa at Ulaman Bali",
   },
   {
     src: "https://images.prismic.io/ulaman/Zpct2h5LeNNTxOAy_skyvilla.jpg?auto=format,compress",
-    alt: "Sky bamboo villa Ulaman Bali",
+    alt: "Sky villa at Ulaman Bali",
   },
-];
+  {
+    src: "https://images.prismic.io/ulaman/Zjr4hkMTzAJOCn6N_bali-architecture.jpg?auto=format,compress",
+    alt: "Bamboo architecture at Ulaman Bali",
+  },
+] as const;
 
 export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  const allNavLinks = useMemo(() => {
-    const merged = [...navigation];
-    PRIMARY_LINKS.forEach((link) => {
-      const alreadyPresent = merged.some(
-        (item) => item.href === link.href || item.label === link.label,
+  const overlayLinks = useMemo<OverlayLink[]>(() => {
+    const merged: OverlayLink[] = [...MENU_BASE_LINKS];
+
+    navigation.forEach((item) => {
+      const exists = merged.some(
+        (link) =>
+          link.href.replace(/\/+$/, "") === item.href.replace(/\/+$/, "") ||
+          link.label.toLowerCase() === item.label.toLowerCase(),
       );
-      if (!alreadyPresent) {
-        merged.push({ label: link.label, href: link.href });
+
+      if (!exists) {
+        merged.push({ label: item.label, href: item.href });
       }
     });
+
     return merged;
   }, [navigation]);
+
+  const midpoint = Math.ceil(overlayLinks.length / 2);
+  const primaryColumn = overlayLinks.slice(0, midpoint);
+  const secondaryColumn = overlayLinks.slice(midpoint);
 
   useEffect(() => {
     if (!isMenuOpen) {
@@ -91,225 +184,298 @@ export function SiteHeader({ navigation, siteName }: SiteHeaderProps) {
     }
 
     document.body.classList.add("overflow-hidden");
-    const timer = window.setInterval(() => {
+    const interval = window.setInterval(() => {
       setActiveImageIndex((prev) => (prev + 1) % GALLERY_IMAGES.length);
     }, 5000);
 
     return () => {
       document.body.classList.remove("overflow-hidden");
-      window.clearInterval(timer);
+      window.clearInterval(interval);
     };
   }, [isMenuOpen]);
 
-  const toggleMenu = () => setIsMenuOpen((current) => !current);
-  const closeMenu = () => setIsMenuOpen(false);
-
-  const ratingLink =
-    "https://www.google.com/travel/search?q=ulaman%20bali&hl=en";
-  const tripAdvisorLink =
-    "https://www.tripadvisor.com/Hotel_Review-g608496-d21058098-Reviews-Ulaman_Eco_Luxury_Retreat-Tabanan_Bali.html";
+  const handleToggleMenu = () => setIsMenuOpen((open) => !open);
+  const handleCloseMenu = () => setIsMenuOpen(false);
 
   return (
     <header
       id="header"
-      className="pointer-events-none fixed inset-x-0 top-0 z-50 flex flex-col"
+      className="pointer-events-none fixed top-0 z-[90] flex h-screen w-full flex-col"
     >
-      <div className="pointer-events-auto flex w-full items-center justify-between bg-stone-950/50 px-4 py-3 text-stone-100 backdrop-blur-lg transition-colors duration-300 md:px-6 lg:px-8">
-        <div className="flex flex-1 items-center gap-6">
-          <button
-            type="button"
-            onClick={toggleMenu}
-            aria-expanded={isMenuOpen}
-            aria-controls="site-menu-overlay"
-            className="group flex h-12 w-12 flex-col items-center justify-center rounded-full border border-white/10 bg-white/5 transition hover:border-white/40 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
-          >
-            <span className="sr-only">
-              {isMenuOpen ? "Close navigation" : "Open navigation"}
-            </span>
-            <div
-              className={cn(
-                "relative h-5 w-6",
-                "before:absolute before:left-0 before:h-0.5 before:w-full before:rounded-full before:bg-current before:transition-transform before:duration-300",
-                "after:absolute after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-current after:transition-transform after:duration-300",
-                isMenuOpen
-                  ? "before:top-1/2 before:-translate-y-1/2 before:rotate-45 after:top-1/2 after:-translate-y-1/2 after:-rotate-45"
-                  : "before:top-1 after:bottom-1",
-              )}
-            />
-          </button>
-          <nav className="hidden items-center gap-6 md:flex">
-            {PRIMARY_LINKS.map((item) => (
-              <NavAnchor key={item.href} {...item} />
-            ))}
-          </nav>
-        </div>
-        <div className="flex flex-1 items-center justify-center text-xs uppercase tracking-[0.4em] md:justify-start">
-          <Link href="#hero" className="font-semibold">
-            {siteName}
-          </Link>
-        </div>
-        <div className="hidden flex-1 items-center justify-end gap-6 text-xs md:flex">
-          <a
-            href={ratingLink}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1 text-stone-300 transition hover:text-white"
-          >
-            <span>4.7</span>
-            <span className="text-[0.6rem]">★</span>
-            <span>/ 742 Google Reviews</span>
-          </a>
-          <a
-            href={tripAdvisorLink}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1 text-stone-300 transition hover:text-white"
-          >
-            <span>5.0</span>
-            <span className="text-[0.6rem]">★</span>
-            <span>/ TripAdvisor</span>
-          </a>
+      <div
+        className={cn(
+          "pointer-events-auto border-b border-brand/20 bg-light-background text-brand transition-[background-color,border-color] duration-300",
+          isMenuOpen && "bg-light text-brand",
+        )}
+      >
+        <div className="app-container flex items-center justify-between py-2 sm:py-4 lg:px-8 xl:px-10">
+          <div className="flex flex-1 items-center gap-10 lg:gap-14">
+            <MenuToggleButton isOpen={isMenuOpen} onClick={handleToggleMenu} />
+
+            <nav className="hidden items-center gap-9 xl:flex">
+              {PRIMARY_LINKS.map((item) => (
+                <NavAnchor
+                  key={item.href}
+                  {...item}
+                  className="ui-underline-anim text-smaller tracking-wide transition hover:text-brand/70"
+                />
+              ))}
+            </nav>
+          </div>
+
+          <div className="flex flex-1 items-center justify-center">
+            <Link
+              href="/"
+              aria-label={siteName}
+              className="transition-opacity duration-300 hover:opacity-80"
+            >
+              <figure className="w-16 opacity-100 transition-[width] duration-300 sm:w-14 lg:w-20">
+                <Image
+                  src={LOGO.src}
+                  alt={LOGO.alt}
+                  width={120}
+                  height={48}
+                  className="h-auto w-full"
+                  priority
+                />
+              </figure>
+            </Link>
+          </div>
+
+          <div className="flex flex-1 items-center justify-end gap-6">
+            <div className="hidden text-smallest sm:block">
+              <ul className="space-y-1 text-brand/80 lg:space-y-0 lg:text-inherit">
+                {REVIEW_LINKS.map((review) => (
+                  <li key={review.href}>
+                    <a
+                      href={review.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-1 transition hover:text-brand"
+                    >
+                      <span>{review.score}</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        className="h-3.5 w-3.5"
+                      >
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                      </svg>
+                      <span>/</span>
+                      <span>{review.descriptor}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <a
+              href={CTA_LINK.href}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-asymetrical border border-brand bg-brand px-6 py-2 text-smallest font-medium leading-none text-light transition-colors duration-300 hover:bg-transparent hover:text-brand"
+            >
+              <span className="sm:hidden">Book</span>
+              <span className="hidden sm:inline">{CTA_LINK.label}</span>
+            </a>
+          </div>
         </div>
       </div>
 
-      <div
+      <aside
         id="site-menu-overlay"
         aria-hidden={!isMenuOpen}
         className={cn(
-          "pointer-events-none fixed inset-0 z-40 flex transform bg-black/80 backdrop-blur-2xl transition duration-300",
-          isMenuOpen
-            ? "pointer-events-auto opacity-100"
-            : "opacity-0 delay-150",
+          "pointer-events-none absolute inset-0 flex h-full w-full flex-col bg-light-background text-brand transition duration-500 ease-out",
+          isMenuOpen ? "pointer-events-auto opacity-100" : "opacity-0",
         )}
       >
-        <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-24 text-stone-100 md:px-6 lg:flex-row lg:px-8">
-          <button
-            type="button"
-            onClick={closeMenu}
-            className="absolute right-4 top-8 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 transition hover:border-white/40 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
-          >
-            <span className="sr-only">Close menu</span>
-            <span className="relative block h-4 w-4">
-              <span className="absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 rotate-45 rounded-full bg-current" />
-              <span className="absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 -rotate-45 rounded-full bg-current" />
-            </span>
-          </button>
-
-          <div className="flex flex-col gap-8 lg:w-1/3">
-            <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-stone-400">
-                Navigate
-              </p>
-              <ul className="mt-4 space-y-3 text-lg font-medium uppercase tracking-[0.2em]">
-                {allNavLinks.map((item) => (
-                  <li key={item.href}>
-                    <NavAnchor
-                      {...item}
-                      className="hover:text-white/70 transition"
-                      onClick={closeMenu}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-stone-400">
-                Explore
-              </p>
-              <ul className="mt-4 flex flex-wrap gap-3 text-sm uppercase tracking-[0.3em] text-stone-300">
-                {FEATURE_LINKS.map((item) => (
-                  <li key={item.href}>
-                    <NavAnchor
-                      {...item}
-                      className="hover:text-white transition"
-                      onClick={closeMenu}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-stone-400">
-                Contact
-              </p>
-              <ul className="mt-4 space-y-2 text-sm text-stone-300">
-                {CONTACT_LINKS.map((item) => (
-                  <li key={item.href}>
-                    <NavAnchor
-                      {...item}
-                      className="hover:text-white transition"
-                      onClick={closeMenu}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="flex flex-1 flex-col gap-8 lg:w-2/3 lg:flex-row">
-            <div className="flex flex-1 flex-col justify-between">
-              <p className="max-w-md text-sm text-stone-300">
-                Ulaman Eco-Luxury Retreat is carved into the jungle canopy of
-                Tabanan, Bali. Discover regenerative architecture, hydrotherapy
-                sanctuaries, and curated wellness experiences surrounded by
-                living water.
-              </p>
-              <div className="mt-8 flex gap-4 text-sm uppercase tracking-[0.3em] text-stone-300">
-                <a
-                  href="https://www.instagram.com/ulaman.ecoretreat"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="transition hover:text-white"
-                >
-                  Instagram
-                </a>
-                <a
-                  href="https://www.facebook.com/ulamanretreat"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="transition hover:text-white"
-                >
-                  Facebook
-                </a>
-                <a
-                  href="https://www.youtube.com/@ulamanretreat"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="transition hover:text-white"
-                >
-                  YouTube
-                </a>
-              </div>
-            </div>
-
-            <div className="relative hidden w-full overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl lg:flex">
-              {GALLERY_IMAGES.map((image, index) => (
-                <div
-                  key={image.src}
-                  className={cn(
-                    "absolute inset-0 h-full w-full transition-opacity duration-700",
-                    index === activeImageIndex
-                      ? "opacity-100"
-                      : "opacity-0",
-                  )}
-                >
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    priority={index === 0}
-                    sizes="(min-width: 1024px) 33vw, 100vw"
-                    className="object-cover"
-                  />
+        <div className="relative flex flex-1 flex-col overflow-hidden">
+          <div className="flex-1 overflow-y-auto pt-28 pb-20 sm:pt-36 xl:pt-56">
+            <div className="app-container flex flex-col gap-16 xl:flex-row xl:gap-24 xl:px-10">
+              <div className="flex flex-col gap-12 xl:w-1/3">
+                <div>
+                  <p className="text-smallest font-medium uppercase tracking-[0.4em] text-brand/60">
+                    Navigate
+                  </p>
+                  <ul className="mt-6 grid gap-x-8 gap-y-4 text-2xl font-light uppercase tracking-[0.2em] sm:grid-cols-2 xl:block xl:space-y-3 xl:text-3xl">
+                    {primaryColumn.map((item) => (
+                      <li key={item.href}>
+                        <NavAnchor
+                          {...item}
+                          className="transition-opacity duration-300 hover:opacity-70"
+                          onClick={handleCloseMenu}
+                        />
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              ))}
+
+                {secondaryColumn.length > 0 ? (
+                  <div>
+                    <p className="text-smallest font-medium uppercase tracking-[0.4em] text-brand/60">
+                      Discover
+                    </p>
+                    <ul className="mt-6 space-y-3 text-2xl font-light uppercase tracking-[0.2em] xl:text-3xl">
+                      {secondaryColumn.map((item) => (
+                        <li key={item.href}>
+                          <NavAnchor
+                            {...item}
+                            className="transition-opacity duration-300 hover:opacity-70"
+                            onClick={handleCloseMenu}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="flex flex-col gap-12 xl:w-1/3">
+                <div>
+                  <p className="text-smallest font-medium uppercase tracking-[0.4em] text-brand/60">
+                    Explore
+                  </p>
+                  <ul className="mt-6 grid gap-3 text-sm uppercase tracking-[0.3em] text-brand/80 sm:grid-cols-2">
+                    {FEATURE_LINKS.map((item) => (
+                      <li key={item.href}>
+                        <NavAnchor
+                          {...item}
+                          className="transition hover:text-brand"
+                          onClick={handleCloseMenu}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <p className="text-smallest font-medium uppercase tracking-[0.4em] text-brand/60">
+                    Contact
+                  </p>
+                  <ul className="mt-6 space-y-3 text-sm text-brand/80">
+                    {CONTACT_LINKS.map((item) => (
+                      <li key={item.href}>
+                        <NavAnchor
+                          {...item}
+                          className="transition hover:text-brand"
+                          onClick={handleCloseMenu}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <p className="text-smallest font-medium uppercase tracking-[0.4em] text-brand/60">
+                    Reviews
+                  </p>
+                  <ul className="mt-6 space-y-3 text-sm text-brand/80">
+                    {REVIEW_LINKS.map((review) => (
+                      <li key={review.href}>
+                        <a
+                          href={review.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center gap-2 transition hover:text-brand"
+                          onClick={handleCloseMenu}
+                        >
+                          <span className="text-base font-medium text-brand">
+                            {review.score}
+                          </span>
+                          <span>/</span>
+                          <span>{review.descriptor}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <nav className="flex flex-wrap gap-x-4 gap-y-2 text-smallest uppercase tracking-[0.3em] text-brand/80">
+                  {SUPPORT_LINKS.map((link, index) => (
+                    <span key={link.href} className="flex items-center gap-2">
+                      {index > 0 && (
+                        <span aria-hidden="true" className="text-brand/40">
+                          /
+                        </span>
+                      )}
+                      <NavAnchor
+                        {...link}
+                        className="transition hover:text-brand"
+                        onClick={handleCloseMenu}
+                      />
+                    </span>
+                  ))}
+                </nav>
+              </div>
+
+              <div className="flex flex-1 flex-col gap-8 xl:w-1/3">
+                <div className="relative h-64 w-full overflow-hidden rounded-t-[4rem] sm:h-80 xl:h-full xl:min-h-[28rem]">
+                  {GALLERY_IMAGES.map((image, index) => (
+                    <div
+                      key={image.src}
+                      className={cn(
+                        "absolute inset-0 h-full w-full transition-opacity duration-700",
+                        index === activeImageIndex ? "opacity-100" : "opacity-0",
+                      )}
+                    >
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        fill
+                        className="object-cover"
+                        priority={index === 0}
+                        sizes="(min-width: 1280px) 30vw, (min-width: 768px) 50vw, 100vw"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </aside>
     </header>
+  );
+}
+
+type MenuToggleButtonProps = {
+  isOpen: boolean;
+  onClick: () => void;
+};
+
+function MenuToggleButton({ isOpen, onClick }: MenuToggleButtonProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-expanded={isOpen}
+      aria-controls="site-menu-overlay"
+      className="group relative flex h-14 w-16 items-center justify-center rounded-full border border-brand/20 bg-brand/5 transition hover:border-brand/40 hover:bg-brand/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+    >
+      <span className="sr-only">{isOpen ? "Close menu" : "Open menu"}</span>
+      <span
+        aria-hidden="true"
+        className="relative block h-3 w-16"
+      >
+        <span
+          className={cn(
+            "absolute left-0 top-0 h-0.5 w-8 rounded-full bg-current transition-all duration-300 group-hover:w-11/12",
+            isOpen && "top-1/2 w-full -translate-y-1/2 rotate-45",
+          )}
+        />
+        <span
+          className={cn(
+            "absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-current transition-all duration-300 group-hover:w-full",
+            isOpen && "top-1/2 w-full -translate-y-1/2 -rotate-45",
+          )}
+        />
+      </span>
+    </button>
   );
 }
 

@@ -209,7 +209,9 @@ function CarouselButton({ direction, disabled }: CarouselButtonProps) {
       )}
       aria-label={direction === "prev" ? "Previous room" : "Next room"}
     >
-      <ArrowIcon />
+      <div className="aspect-square text-current p-0 px-6 flex items-center">
+        <ArrowIcon />
+      </div>
     </button>
   );
 }

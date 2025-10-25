@@ -468,7 +468,7 @@ export function ExperiencesCollageSlice() {
 
                 <div className="hide-scrollbar flex-1 overflow-y-auto px-6 py-8 sm:px-10 sm:py-10">
                   <span className="text-brand/80 text-smallest tracking-wide sm:text-smaller">
-                    {activeIndex + 1} / {totalExperiences}
+                    {(activeIndex || 0) + 1} / {totalExperiences}
                   </span>
                   <header className="mt-4 space-y-4 sm:mt-6">
                     <div>
@@ -529,50 +529,17 @@ export function ExperiencesCollageSlice() {
                 </div>
 
                 <footer className="flex flex-col gap-6 border-t border-brand/20 px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:py-8">
-                  <div className="flex gap-3 sm:gap-4">
-                    <button
-                      type="button"
-                      onClick={goToPrevious}
+                  <div className="flex gap-5 sm:gap-3.5 lg:gap-6 text-brand">
+                    <ModalCarouselButton
+                      direction="prev"
                       disabled={activeIndex === 0}
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-brand text-brand transition hover:bg-brand hover:text-light disabled:cursor-not-allowed disabled:border-brand/40 disabled:text-brand/40"
-                      aria-label="View previous experience"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        className="h-5 w-5 -rotate-180"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M18 8L22 12L18 16" />
-                        <path d="M2 12H22" />
-                      </svg>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={goToNext}
+                      onClick={goToPrevious}
+                    />
+                    <ModalCarouselButton
+                      direction="next"
                       disabled={activeIndex === totalExperiences - 1}
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-brand text-brand transition hover:bg-brand hover:text-light disabled:cursor-not-allowed disabled:border-brand/40 disabled:text-brand/40"
-                      aria-label="View next experience"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        className="h-5 w-5"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M18 8L22 12L18 16" />
-                        <path d="M2 12H22" />
-                      </svg>
-                    </button>
+                      onClick={goToNext}
+                    />
                   </div>
 
                   <nav className="flex flex-wrap gap-3 sm:justify-end">
@@ -603,5 +570,52 @@ export function ExperiencesCollageSlice() {
         </ModalPortal>
       ) : null}
     </section>
+  );
+}
+
+type ModalCarouselButtonProps = {
+  direction: "prev" | "next";
+  disabled?: boolean;
+  onClick: () => void;
+};
+
+function ModalCarouselButton({
+  direction,
+  disabled,
+  onClick,
+}: ModalCarouselButtonProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={`flex h-16 w-16 items-center justify-center rounded border border-current text-brand transition hover:bg-brand hover:text-light disabled:cursor-not-allowed disabled:border-brand/40 disabled:text-brand/40${direction === "prev" ? " rotate-180" : ""}`}
+      aria-label={direction === "prev" ? "View previous experience" : "View next experience"}
+    >
+      <div className="aspect-square text-current p-0 px-6 flex items-center">
+        <ModalArrowIcon />
+      </div>
+    </button>
+  );
+}
+
+function ModalArrowIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="lucide lucide-move-right-icon w-7 stroke-1"
+      aria-hidden="true"
+    >
+      <path d="M18 8L22 12L18 16" />
+      <path d="M2 12H22" />
+    </svg>
   );
 }

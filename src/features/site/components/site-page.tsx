@@ -2,19 +2,14 @@
 
 import { Suspense } from "react";
 
-// import { ArticlesGrid } from "@/features/site/components/articles-grid";
-// import { HeroSection } from "@/features/site/components/hero-section";
-// import { HighlightsGrid } from "@/features/site/components/highlights-grid";
-// import { OfferingsList } from "@/features/site/components/offerings-list";
-// import { ParallaxSlices } from "@/features/site/components/parallax-slices";
 import { ArchitectureMediaSlice } from "@/features/site/components/architecture-media-slice";
+import { CallToActionSlice } from "@/features/site/components/call-to-action-slice";
 import { CommonArticleSection } from "@/features/site/components/common-article-section";
 import { CurtainRevealSlice } from "@/features/site/components/curtain-reveal-slice";
 import { ExperiencesCollageSlice } from "@/features/site/components/experiences-collage-slice";
 import { ExperiencesScheduleSlice } from "@/features/site/components/experiences-schedule-slice";
 import { ImagePanelSlice } from "@/features/site/components/image-panel-slice";
 import { ImageVideoSlice } from "@/features/site/components/image-video-slice";
-import { LandingFooterSlice } from "@/features/site/components/landing-footer-slice";
 import { MapOfUlamanSlice } from "@/features/site/components/map-of-ulaman-slice";
 import { PackagesCarouselSlice } from "@/features/site/components/packages-carousel-slice";
 import { ReviewsSectionSlice } from "@/features/site/components/reviews-section-slice";
@@ -78,7 +73,8 @@ function SitePageContent() {
                 <ReviewsSectionSlice />
                 <ExperiencesCollageSlice />
                 <ExperiencesScheduleSlice />
-                <LandingFooterSlice />
+                <CallToActionSlice />
+                {/* <LandingFooterSlice /> */}
               </div>
 
               <SiteFooter footer={data.footer} social={data.meta.social} />
