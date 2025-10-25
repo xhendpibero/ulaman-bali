@@ -7637,6 +7637,6 @@ input:focus + .\[input\:focus\+\&\]\:\!scale-75 {
   }
 }
 
-.animate-\[slide_60s_linear_infinite] {
+.animate-\[slide_60s_linear_infinite\] {
   animation: slide 60s linear infinite;
 }
