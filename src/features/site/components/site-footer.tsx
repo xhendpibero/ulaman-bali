@@ -113,6 +113,8 @@ export function SiteFooter({ footer: _footer, social }: SiteFooterProps) {
     [],
   );
 
+  console.log(_footer)
+
   const connectLinks = useMemo<FooterNavItem[]>(
     () => [
       ...CONNECT_LINKS,
@@ -338,8 +340,8 @@ function BadgeMarquee({
   badges,
   doubledBadges,
 }: {
-  badges: typeof FEATURED_BADGES;
-  doubledBadges: typeof FEATURED_BADGES;
+  badges: readonly FeaturedBadge[];
+  doubledBadges: readonly FeaturedBadge[];
 }) {
   const marqueeItems = useMemo(
     () => [...badges, ...doubledBadges],

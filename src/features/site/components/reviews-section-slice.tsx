@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import {
   ReactNode,
@@ -10,6 +9,8 @@ import {
   useRef,
   useState,
 } from "react";
+
+import { cn } from "@/lib/utils";
 
 type ReviewStat = {
   rating: string;

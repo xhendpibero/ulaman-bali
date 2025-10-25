@@ -33,10 +33,10 @@ const PANEL_IMAGES = [
 ] as const;
 
 export function ImagePanelSlice() {
-  const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const panelRefs = useRef<(HTMLElement | null)[]>([]);
   const animationFrame = useRef<number | null>(null);
 
-  const setRef = useCallback((element: HTMLDivElement | null, index: number) => {
+  const setRef = useCallback((element: HTMLElement | null, index: number) => {
     panelRefs.current[index] = element;
   }, []);
 
@@ -102,12 +102,6 @@ export function ImagePanelSlice() {
             <figure
               ref={(element) => setRef(element, index)}
               className="group relative h-full w-full"
-              style={
-                {
-                  "--parallax-shift": "0px",
-                  "--panel-scale": "1.1",
-                } satisfies CSSProperties
-              }
             >
               <div className="absolute inset-0">
                 <Image
