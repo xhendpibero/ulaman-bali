@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 
@@ -79,8 +80,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-stone-950 text-stone-100 antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-stone-950 text-stone-100 antialiased bg-light-background`}
       >
+        <Script id="cleanup-fdprocessedid" strategy="beforeInteractive">
+          {`(function(){if(typeof document==="undefined"){return;}var removeAttrs=function(root){if(!root||!root.querySelectorAll){return;}var nodes=root.querySelectorAll("[fdprocessedid]");for(var i=0;i<nodes.length;i+=1){nodes[i].removeAttribute("fdprocessedid");}};removeAttrs(document);var observer=new MutationObserver(function(mutations){for(var i=0;i<mutations.length;i+=1){var mutation=mutations[i];if(mutation.type==="attributes"&&mutation.attributeName==="fdprocessedid"&&mutation.target&&mutation.target.removeAttribute){mutation.target.removeAttribute("fdprocessedid");}if(mutation.type==="childList"){for(var j=0;j<mutation.addedNodes.length;j+=1){var node=mutation.addedNodes[j];if(node&&node.nodeType===1){if(node.hasAttribute&&node.hasAttribute("fdprocessedid")){node.removeAttribute("fdprocessedid");}removeAttrs(node);}}}}});observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:["fdprocessedid"]});})()`}
+        </Script>
         <Providers>{children}</Providers>
       </body>
     </html>

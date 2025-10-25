@@ -2206,7 +2206,7 @@ button.rounded-asymetrical {
 }
 
 .rotate-180 {
-  --tw-rotate: 180deg;
+  --tw-rotate: 0deg;
 }
 
 .rotate-90 {
