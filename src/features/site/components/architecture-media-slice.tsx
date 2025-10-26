@@ -8,9 +8,9 @@ const INITIAL_WIDTH_PERCENT = 50;
 const FINAL_WIDTH_PERCENT = 100;
 const INITIAL_RADIUS = 1024;
 const FINAL_RADIUS = 0;
-// const INITIAL_SHIFT = -800;
-// const FINAL_SHIFT = 1080;
-const EASING = 0.12;
+const INITIAL_SHIFT = -800;
+const FINAL_SHIFT = 1320;
+const EASING = 0.6;
 const EPSILON = 0.001;
 
 export function ArchitectureMediaSlice() {
@@ -90,8 +90,8 @@ export function ArchitectureMediaSlice() {
     INITIAL_RADIUS + (FINAL_RADIUS - INITIAL_RADIUS) * displayProgress
   }px 0 0`;
 
-  // const animatedShift =
-  //   INITIAL_SHIFT + (FINAL_SHIFT - INITIAL_SHIFT) * displayProgress;
+  const animatedShift =
+    INITIAL_SHIFT + (FINAL_SHIFT - INITIAL_SHIFT) * displayProgress;
 
   return (
     <section
@@ -108,14 +108,14 @@ export function ArchitectureMediaSlice() {
           borderRadius: animatedRadius,
         }}
       >
-        {/* <div className="h-screen w-screen rounded-none object-cover xl:absolute">
+        <div className="h-screen w-screen rounded-none object-cover xl:absolute">
           <div
             className="h-full w-full"
             style={{
               transform: `translate(0px, ${animatedShift}px)`,
               willChange: "transform",
             }}
-            data-speed="0.01"
+            data-speed="0.001"
             data-lag="0"
           >
             <img
@@ -125,7 +125,7 @@ export function ArchitectureMediaSlice() {
               className="h-full w-full object-cover"
             />
           </div>
-        </div> */}
+        </div>
       </div>
     </section>
   );

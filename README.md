@@ -87,3 +87,10 @@ The repo follows Next.js conventions (`src/app` for routing, `src/features` for 
 
 ### 15. Error Handling: What is your approach to handling different types of errors (network, data, UI) gracefully?
 I separate concerns: network errors are caught in the fetch layer and surfaced via a shared notification/toast system; data errors are prevented with TypeScript and runtime guards before they reach the UI; unexpected UI crashes fall back to React error boundaries so the page stays usable. For observability I hook into a logging service (Sentry or similar) so we spot issues before users report them.
+
+Admin Links
+-----------
+
+- Filament Admin: http://147.93.107.169:11020/admin/login  
+  - Email: `admin@gmail.com`  
+  - Password: `admin`

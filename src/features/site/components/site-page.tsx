@@ -18,6 +18,8 @@ import { ScrollHighlightingCta } from "@/features/site/components/scroll-highlig
 import { SiteFooter } from "@/features/site/components/site-footer";
 import { SiteHeader } from "@/features/site/components/site-header";
 import { TextBehindImageSlice } from "@/features/site/components/text-behind-image-slice";
+import { useArticleSlides } from "@/features/site/queries/article-slides";
+import { useMapBasePoints } from "@/features/site/queries/map-base-points";
 import { useSiteContent } from "@/features/site/queries/site-content";
 
 export function SitePage() {
@@ -30,6 +32,8 @@ export function SitePage() {
 
 function SitePageContent() {
   const { data } = useSiteContent();
+  const { data: articleSlides } = useArticleSlides();
+  const { data: baseMapPoints } = useMapBasePoints();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-stone-950 to-black">
@@ -60,7 +64,7 @@ function SitePageContent() {
               <div className="space-y-36 sm:space-y-28 lg:space-y-40 xl:space-y-36">
                 <ImageVideoSlice />
                 <ScrollHighlightingCta />
-                <CommonArticleSection />
+                <CommonArticleSection slides={articleSlides} />
                 <RoomTypesCarouselSlice />
                 <ScrollHighlightingCta />
                 <ArchitectureMediaSlice />
@@ -69,7 +73,7 @@ function SitePageContent() {
                 <TextBehindImageSlice />
                 <ScrollHighlightingCta />
                 <ImagePanelSlice />
-                <MapOfUlamanSlice />
+                <MapOfUlamanSlice basePoints={baseMapPoints} />
                 <ReviewsSectionSlice />
                 <ExperiencesCollageSlice />
                 <ExperiencesScheduleSlice />

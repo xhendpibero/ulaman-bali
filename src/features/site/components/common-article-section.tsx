@@ -1,17 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { cn } from "@/lib/utils";
+import type { ArticleSlide } from "@/features/site/services/fetch-article-slides";
 
-type ArticleSlide = {
-  src: string;
-  alt: string;
-  loading: "eager" | "lazy";
+type CommonArticleSectionProps = {
+  slides: ReadonlyArray<ArticleSlide>;
 };
 
-const ARTICLE_SLIDES: ArticleSlide[] = [
+const FALLBACK_SLIDES: ArticleSlide[] = [
   {
     src: "https://images.prismic.io/ulaman/Zpcs2R5LeNNTxOAv_ulaman.jpg?auto=format,compress",
     alt: "Ulaman Bali",
@@ -37,9 +36,25 @@ const ARTICLE_LINES = [
   "luxurious environment.",
 ];
 
-export function CommonArticleSection() {
+export function CommonArticleSection({ slides }: CommonArticleSectionProps) {
+  const slideDeck = useMemo(
+    () => (slides.length > 0 ? slides : FALLBACK_SLIDES),
+    [slides],
+  );
+
   const [activeSlide, setActiveSlide] = useState(0);
-  const totalSlides = ARTICLE_SLIDES.length;
+  const totalSlides = slideDeck.length;
+
+  useEffect(() => {
+    if (totalSlides === 0) {
+      setActiveSlide(0);
+      return;
+    }
+
+    setActiveSlide((current) =>
+      current >= totalSlides ? totalSlides - 1 : current,
+    );
+  }, [totalSlides]);
 
   const goToSlide = useCallback(
     (nextIndex: number) => {
@@ -63,13 +78,13 @@ export function CommonArticleSection() {
 
   const indicators = useMemo(
     () =>
-      ARTICLE_SLIDES.map((slide, index) => ({
+      slideDeck.map((slide, index) => ({
         id: `${slide.src}-indicator`,
         isActive: index === activeSlide,
         onClick: () => goToSlide(index),
         label: `Go to slide ${index + 1}`,
       })),
-    [activeSlide, goToSlide],
+    [activeSlide, goToSlide, slideDeck],
   );
 
   return (
@@ -84,7 +99,7 @@ export function CommonArticleSection() {
             <figure className="group relative h-full w-full overflow-hidden rounded-asymetrical border-none object-cover">
               <div className="rounded-inherit">
                 <div className="absolute inset-0 flex justify-center rounded-inherit">
-                  {ARTICLE_SLIDES.map((slide, index) => (
+                  {slideDeck.map((slide, index) => (
                     <div
                       key={slide.src}
                       className={cn(

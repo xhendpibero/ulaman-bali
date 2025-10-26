@@ -4,11 +4,14 @@ import Image from "next/image";
 import {
   useCallback,
   useEffect,
+  useMemo,
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
+
+import type { BaseMapPoint } from "@/features/site/services/fetch-map-points";
 
 type MapPointModalContent = {
   category: string;
@@ -32,6 +35,10 @@ type MapPoint = {
   icon: string;
   label: string;
   modal?: MapPointModalContent;
+};
+
+type MapOfUlamanSliceProps = {
+  basePoints: ReadonlyArray<BaseMapPoint>;
 };
 
 const MAP_POINT_DETAILS: Record<string, MapPointModalContent> = {
@@ -169,7 +176,7 @@ const MAP_POINT_DETAILS: Record<string, MapPointModalContent> = {
   },
 };
 
-const BASE_MAP_POINTS: Array<Omit<MapPoint, "modal">> = [
+const FALLBACK_BASE_MAP_POINTS: ReadonlyArray<BaseMapPoint> = [
   {
     top: "8%",
     left: "56%",
@@ -296,38 +303,40 @@ const BASE_MAP_POINTS: Array<Omit<MapPoint, "modal">> = [
     icon: "https://ulaman.cdn.prismic.io/ulaman/Zm_tQJm069VX1y_a_Group6116.svg?auto=compress,format",
     label: "Mandala Yoga Shala",
   },
-];
+] as const;
 
-const MAP_POINTS: MapPoint[] = BASE_MAP_POINTS.map((point) => ({
-  ...point,
-  modal:
-    MAP_POINT_DETAILS[point.label] ??
-    ({
-      category: "Discover",
-      title: point.label,
-      description: (
-        <p>
-          We&apos;re crafting a detailed highlight for this space. Check back
-          soon to explore more about {point.label}.
-        </p>
-      ),
-      images: [
-        {
-          src: "/ulaman.B-iYsIcw.jpg",
-          alt: "Ulaman Bali aerial map",
-        },
-      ],
-    } satisfies MapPointModalContent),
-}));
+export function MapOfUlamanSlice({ basePoints }: MapOfUlamanSliceProps) {
+  const mapPoints = useMemo<MapPoint[]>(() => {
+    const sourcePoints =
+      basePoints.length > 0 ? basePoints : FALLBACK_BASE_MAP_POINTS;
 
-export function MapOfUlamanSlice() {
+    return sourcePoints.map((point) => ({
+      ...point,
+      modal: resolveModalContent(point.label, point.modal),
+    }));
+  }, [basePoints]);
+
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [activeSlide, setActiveSlide] = useState(0);
 
-  const handleOpenModal = useCallback((index: number) => {
-    setActiveIndex(index);
-    setActiveSlide(0);
-  }, []);
+  useEffect(() => {
+    if (mapPoints.length === 0) {
+      setActiveIndex(null);
+    } else if (activeIndex !== null && activeIndex >= mapPoints.length) {
+      setActiveIndex(0);
+    }
+  }, [activeIndex, mapPoints.length]);
+
+  const handleOpenModal = useCallback(
+    (index: number) => {
+      if (index < 0 || index >= mapPoints.length) {
+        return;
+      }
+      setActiveIndex(index);
+      setActiveSlide(0);
+    },
+    [mapPoints.length],
+  );
 
   const handleCloseModal = useCallback(() => {
     setActiveIndex(null);
@@ -366,9 +375,9 @@ export function MapOfUlamanSlice() {
   }, [activeIndex, handleCloseModal]);
 
   const activePoint =
-    activeIndex !== null ? MAP_POINTS[activeIndex] : undefined;
+    activeIndex !== null ? mapPoints[activeIndex] : undefined;
   const modalContent = activePoint?.modal;
-  const images = modalContent?.images ?? [];
+  const images = modalContent?.images ?? [] as const;
   const hasMultipleImages = images.length > 1;
 
   return (
@@ -408,7 +417,7 @@ export function MapOfUlamanSlice() {
                 />
 
                 <ul>
-                  {MAP_POINTS.map((point, index) => (
+                  {mapPoints.map((point, index) => (
                     <li key={`${point.label}-${point.top}-${point.left}`}>
                       <div
                         role="button"
@@ -630,4 +639,83 @@ function ModalPortal({ children }: { children: ReactNode }) {
   }
 
   return createPortal(children, container);
+}
+
+function resolveModalContent(
+  label: string,
+  pointModal?: {
+    category?: string | null;
+    title?: string;
+    subtitle?: string | null;
+    description?: string | null;
+    cta?: {
+      label?: string | null;
+      url?: string | null;
+    } | null;
+    images?: Array<{
+      src: string;
+      alt: string;
+    }>;
+  },
+): MapPointModalContent {
+  const fallbackDetail =
+    MAP_POINT_DETAILS[label] ?? createDefaultModalContent(label);
+
+  const category = pointModal?.category ?? fallbackDetail.category;
+  const title = pointModal?.title ?? fallbackDetail.title;
+  const subtitle = pointModal?.subtitle ?? fallbackDetail.subtitle;
+
+  const description: ReactNode =
+    pointModal?.description != null
+      ? wrapDescription(pointModal.description)
+      : fallbackDetail.description;
+
+  const resolvedImages =
+    pointModal?.images && pointModal.images.length > 0
+      ? pointModal.images
+      : fallbackDetail.images;
+
+  const resolvedCta =
+    pointModal?.cta?.url != null
+      ? {
+          label:
+            pointModal.cta.label ??
+            fallbackDetail.cta?.label ??
+            "Learn more",
+          href: pointModal.cta.url,
+          external: pointModal.cta.url.startsWith("http"),
+        }
+      : fallbackDetail.cta;
+
+  return {
+    category,
+    title,
+    subtitle: subtitle ?? undefined,
+    description,
+    cta: resolvedCta,
+    images: resolvedImages,
+  };
+}
+
+function wrapDescription(description: string): ReactNode {
+  return <p>{description}</p>;
+}
+
+function createDefaultModalContent(label: string): MapPointModalContent {
+  return {
+    category: "Discover",
+    title: label,
+    description: (
+      <p>
+        We&apos;re crafting a detailed highlight for this space. Check back soon
+        to explore more about {label}.
+      </p>
+    ),
+    images: [
+      {
+        src: "/ulaman.B-iYsIcw.jpg",
+        alt: "Ulaman Bali aerial map",
+      },
+    ],
+  };
 }
